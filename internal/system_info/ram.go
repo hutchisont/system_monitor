@@ -25,14 +25,14 @@ func (r RAM) String() string {
 	return fmt.Sprintf("Total RAM: %.2fGB\nAvailable RAM: %.2fGB", r.totalRAM, r.availableRAM)
 }
 
+var memTotalRegex = regexp.MustCompile("MemTotal:\\s*(?P<Total>\\d*)")
+var memAvailableRegex = regexp.MustCompile("MemAvailable:\\s*(?P<Available>\\d*)")
+
 func (r *RAM) updateMeminfoFromData(data []byte) {
-	// TODO(Tyler): this is really not ideal, if the order of mem total and mem
-	// available ever change then this will break
-	reg := regexp.
-		MustCompile("MemTotal:\\s*(?P<Total>\\d*)|MemAvailable:\\s*(?P<Available>\\d*)")
-	matches := reg.FindAllSubmatch(data, -1)
-	total := string(matches[0][reg.SubexpIndex("Total")])
-	avail := string(matches[1][reg.SubexpIndex("Available")])
+	totalMatches := memTotalRegex.FindSubmatch(data)
+	total := string(totalMatches[memTotalRegex.SubexpIndex("Total")])
+	memAvailableMatches := memAvailableRegex.FindSubmatch(data)
+	avail := string(memAvailableMatches[memAvailableRegex.SubexpIndex("Available")])
 	totalkB, err := strconv.ParseFloat(total, 64)
 	if err != nil {
 		log.Fatalln(err)
