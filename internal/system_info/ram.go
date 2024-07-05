@@ -25,12 +25,12 @@ func (r RAM) String() string {
 	return fmt.Sprintf("Total RAM: %.2fGB\nAvailable RAM: %.2fGB", r.totalRAM, r.availableRAM)
 }
 
-func (r *RAM) updateMeminfoFromData(info []byte) {
+func (r *RAM) updateMeminfoFromData(data []byte) {
 	// TODO(Tyler): this is really not ideal, if the order of mem total and mem
 	// available ever change then this will break
 	reg := regexp.
 		MustCompile("MemTotal:\\s*(?P<Total>\\d*)|MemAvailable:\\s*(?P<Available>\\d*)")
-	matches := reg.FindAllSubmatch(info, -1)
+	matches := reg.FindAllSubmatch(data, -1)
 	total := string(matches[0][reg.SubexpIndex("Total")])
 	avail := string(matches[1][reg.SubexpIndex("Available")])
 	totalkB, err := strconv.ParseFloat(total, 64)
