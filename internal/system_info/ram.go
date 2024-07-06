@@ -2,7 +2,6 @@ package SystemInfo
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"regexp"
 	"strconv"
@@ -35,11 +34,11 @@ func (r *RAM) updateMeminfoFromData(data []byte) {
 	avail := string(memAvailableMatches[memAvailableRegex.SubexpIndex("Available")])
 	totalkB, err := strconv.ParseFloat(total, 64)
 	if err != nil {
-		log.Fatalln(err)
+		totalkB = -1
 	}
 	availkB, err := strconv.ParseFloat(avail, 64)
 	if err != nil {
-		log.Fatalln(err)
+		availkB = -1
 	}
 
 	r.totalRAM = kiloByteTogigaByte(totalkB)
@@ -48,9 +47,6 @@ func (r *RAM) updateMeminfoFromData(data []byte) {
 
 func getMeminfo() (data []byte) {
 	const meminfoFilePath = "/proc/meminfo"
-	data, err := os.ReadFile(meminfoFilePath)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	data, _ = os.ReadFile(meminfoFilePath)
 	return data
 }

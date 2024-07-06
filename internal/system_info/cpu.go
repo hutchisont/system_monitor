@@ -40,7 +40,7 @@ func (c *CPU) updateCPUinfoFromData(data []byte) {
 		count, err := strconv.
 			ParseInt(string(matches[coreCountRegex.SubexpIndex("CoreCount")]), 10, 64)
 		if err != nil {
-			log.Fatalln("Could not convert core count", err)
+			count = -1
 		}
 		c.count = int(count)
 	}
@@ -49,14 +49,17 @@ func (c *CPU) updateCPUinfoFromData(data []byte) {
 		c.frequency = make([]float64, c.count)
 	}
 
-	matches := frequencyRegex.FindAllSubmatch(data, c.count)
-	for i := 0; i < c.count; i++ {
-		frequency, err := strconv.
-			ParseFloat(string(matches[i][frequencyRegex.SubexpIndex("Frequency")]), 64)
-		if err != nil {
-			log.Fatalln("Could not convert frequency for core: ", i)
+	if c.count > 0 {
+		matches := frequencyRegex.FindAllSubmatch(data, c.count)
+		for i := 0; i < c.count; i++ {
+			frequency, err := strconv.
+				ParseFloat(string(matches[i][frequencyRegex.SubexpIndex("Frequency")]), 64)
+			if err != nil {
+				frequency = -1
+			}
+			c.frequency[i] = frequency
 		}
-		c.frequency[i] = frequency
+
 	}
 }
 
