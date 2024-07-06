@@ -11,8 +11,8 @@ import (
 // https://github.com/torvalds/linux/blob/master/Documentation/filesystems/proc.rst#meminfo
 
 type RAM struct {
-	totalRAM     float64
-	availableRAM float64
+	TotalRAM     float64
+	AvailableRAM float64
 }
 
 func (r *RAM) updateRAMReading() {
@@ -21,7 +21,8 @@ func (r *RAM) updateRAMReading() {
 }
 
 func (r RAM) String() string {
-	return fmt.Sprintf("Total RAM: %.2f GB\nAvailable RAM: %.2f GB", r.totalRAM, r.availableRAM)
+	return fmt.Sprintf("Total RAM: %.2f GB\nAvailable RAM: %.2f GB",
+		r.TotalRAM, r.AvailableRAM)
 }
 
 var memTotalRegex = regexp.MustCompile("MemTotal:\\s*(?P<Total>\\d*)")
@@ -41,8 +42,8 @@ func (r *RAM) updateMeminfoFromData(data []byte) {
 		availkB = -1
 	}
 
-	r.totalRAM = kiloByteTogigaByte(totalkB)
-	r.availableRAM = kiloByteTogigaByte(availkB)
+	r.TotalRAM = kiloByteTogigaByte(totalkB)
+	r.AvailableRAM = kiloByteTogigaByte(availkB)
 }
 
 func getMeminfo() (data []byte) {

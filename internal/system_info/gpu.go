@@ -7,25 +7,24 @@ import (
 	"strings"
 )
 
-// would be really nice to get name as well, will have to figure out where to
-// get that from
-
+// TODO(Tyler): Would be really nice to get name as well, will have to figure
+// out where to get that from
 type GPU struct {
 	gpuPCIDeviceID  string
-	gpuBusyPercent  float64
-	vramBusyPercent float64
-	vramTotal       float64
-	vramUsed        float64
-	vramAvailable   float64
+	GpuBusyPercent  float64
+	VramBusyPercent float64
+	VramTotal       float64
+	VramUsed        float64
+	VramAvailable   float64
 }
 
 func (g GPU) String() string {
 	return fmt.Sprintf("GPU Usage: %.0f%%\nVRAM Usage: %.0f%%\nVRAM Total: %.2f GB\nVRAM Used: %.2f GB\nVRAM Available: %.2f GB",
-		g.gpuBusyPercent, g.vramBusyPercent, g.vramTotal, g.vramUsed, g.vramAvailable)
+		g.GpuBusyPercent, g.VramBusyPercent, g.VramTotal, g.VramUsed, g.VramAvailable)
 }
 
 func (g *GPU) updateGPUReading() {
-	g.gpuBusyPercent, g.vramBusyPercent, g.vramTotal, g.vramUsed, g.vramAvailable = getGPUInfoData()
+	g.GpuBusyPercent, g.VramBusyPercent, g.VramTotal, g.VramUsed, g.VramAvailable = getGPUInfoData()
 }
 
 func getGPUInfoData() (gpuBusyPercentF, vramBusyPercentF, vramTotalF, vramUsedF, vramAvailableF float64) {
