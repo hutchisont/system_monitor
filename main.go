@@ -20,15 +20,15 @@ func benchmark() {
 	fmt.Print("\nStarting benchmark\n\n")
 
 	i := test(100)
-	fmt.Println("did", 100, "readings in 1", i)
+	fmt.Printf("did 100 readings in %.5f seconds\n", i.Seconds())
 	i = test(1_000)
-	fmt.Println("did", 1_000, "readings in", i)
+	fmt.Printf("did 1,000 readings in %.5f seconds\n", i.Seconds())
 	i = test(10_000)
-	fmt.Println("did", 10_000, "readings in", i)
+	fmt.Printf("did 10,000 readings in %.5f seconds\n", i.Seconds())
 	i = test(100_000)
-	fmt.Println("did", 100_000, "readings in", i)
+	fmt.Printf("did 100,000 readings in %.5f seconds\n", i.Seconds())
 	i = test(1_000_000)
-	fmt.Println("did", 1_000_000, "readings in", i)
+	fmt.Printf("did 1,000,000 readings in %.5f seconds\n", i.Seconds())
 
 	fmt.Print("\nBenchmark Finished")
 }
