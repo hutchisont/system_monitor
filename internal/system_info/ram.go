@@ -16,7 +16,7 @@ type RAM struct {
 	availableRAM float64
 }
 
-func (r *RAM) UpdateRAMReading() {
+func (r *RAM) updateRAMReading() {
 	data := getMeminfo()
 	r.updateMeminfoFromData(data)
 }

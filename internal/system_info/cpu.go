@@ -23,7 +23,7 @@ func (c CPU) String() string {
 	// 	c.model, c.count, c.usage, c.frequency)
 }
 
-func (c *CPU) UpdateCPUReading() {
+func (c *CPU) updateCPUReading() {
 	data := readCPUInfo()
 	c.updateCPUinfoFromData(data)
 
