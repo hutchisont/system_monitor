@@ -10,4 +10,7 @@ func main() {
 	ram := SystemInfo.RAM{}
 	ram.UpdateRAMReading()
 	fmt.Println(ram)
+	cpu := SystemInfo.CPU{}
+	cpu.UpdateCPUReading()
+	fmt.Println(cpu)
 }
