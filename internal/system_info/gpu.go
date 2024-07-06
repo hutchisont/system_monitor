@@ -1,6 +1,12 @@
 package SystemInfo
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"os"
+	"strconv"
+	"strings"
+)
 
 // TODO(Tyler): This will have to figure out the pci device number of the GPU
 // and then read from /sys/bus/pci/devices/<id>/
@@ -25,17 +31,54 @@ type GPU struct {
 }
 
 func (g GPU) String() string {
-	return fmt.Sprintf("GPU Usage: %.2f\nVRAM Usage: %.2f\nVRAM Total: %.2f\nVRAM Used: %.2f\nVRAM Available: %.2f",
+	return fmt.Sprintf("GPU Usage: %.0f%%\nVRAM Usage: %.0f%%\nVRAM Total: %.2f GB\nVRAM Used: %.2f GB\nVRAM Available: %.2f GB",
 		g.gpuBusyPercent, g.vramBusyPercent, g.vramTotal, g.vramUsed, g.vramAvailable)
 }
 
-func (g *GPU) UpdateGPUReading() {
-
+func (g *GPU) updateGPUReading() {
+	g.gpuBusyPercent, g.vramBusyPercent, g.vramTotal, g.vramUsed, g.vramAvailable = getGPUInfoData()
 }
 
-// going to have to get data from multiple files. maybe create and return a map?
-// might be more performant to just return a [][]byte and know for myself
-// what index means for each
-func getGPUInfoData() {
+func getGPUInfoData() (gpuBusyPercentF, vramBusyPercentF, vramTotalF, vramUsedF, vramAvailableF float64) {
+	// TODO(Tyler): Figure out how to dynamically determine the correct ID here
+	const baseLocation = "/sys/bus/pci/devices/0000:0b:00.0/"
+	gpuBusyPercent, err := os.ReadFile(baseLocation + "gpu_busy_percent")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	memBusyPercent, err := os.ReadFile(baseLocation + "mem_busy_percent")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	vramTotal, err := os.ReadFile(baseLocation + "mem_info_vram_total")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	vramUsed, err := os.ReadFile(baseLocation + "mem_info_vram_used")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	gpuBusyPercentF, err = strconv.ParseFloat(strings.TrimSpace(string(gpuBusyPercent)), 64)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	vramBusyPercentF, err = strconv.ParseFloat(strings.TrimSpace(string(memBusyPercent)), 64)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	vramTotalF, err = strconv.ParseFloat(strings.TrimSpace(string(vramTotal)), 64)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	vramUsedF, err = strconv.ParseFloat(strings.TrimSpace(string(vramUsed)), 64)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	vramAvailableF = vramTotalF - vramUsedF
+
+	return gpuBusyPercentF, vramBusyPercentF, byteTogigaByte(vramTotalF),
+		byteTogigaByte(vramUsedF), byteTogigaByte(vramAvailableF)
 
 }

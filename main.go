@@ -8,6 +8,16 @@ import (
 )
 
 func main() {
+	sysInfo := SystemInfo.SystemInfo{}
+	sysInfo.UpdateAllReadings()
+	fmt.Println(sysInfo)
+
+	benchmark()
+}
+
+func benchmark() {
+
+	fmt.Print("\nStarting benchmark\n\n")
 
 	i := test(100)
 	fmt.Println("did", 100, "readings in 1", i)
@@ -19,6 +29,8 @@ func main() {
 	fmt.Println("did", 100_000, "readings in", i)
 	i = test(1_000_000)
 	fmt.Println("did", 1_000_000, "readings in", i)
+
+	fmt.Print("\nBenchmark Finished")
 }
 
 func test(iters int) (seconds time.Duration) {

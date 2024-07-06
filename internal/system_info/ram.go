@@ -22,7 +22,7 @@ func (r *RAM) updateRAMReading() {
 }
 
 func (r RAM) String() string {
-	return fmt.Sprintf("Total RAM: %.2fGB\nAvailable RAM: %.2fGB", r.totalRAM, r.availableRAM)
+	return fmt.Sprintf("Total RAM: %.2f GB\nAvailable RAM: %.2f GB", r.totalRAM, r.availableRAM)
 }
 
 var memTotalRegex = regexp.MustCompile("MemTotal:\\s*(?P<Total>\\d*)")

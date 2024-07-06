@@ -10,23 +10,19 @@ import (
 
 // TODO(Tyler): Add getting usage at some point, probably overall and per core
 type CPU struct {
-	model string
-	count int
-	// usage     float64
+	model     string
+	count     int
 	frequency []float64
 }
 
 func (c CPU) String() string {
-	return fmt.Sprintf("Model: %v\nThread Count: %v\nPer Core Frequency: %v",
+	return fmt.Sprintf("Model: %v\nThread Count: %v\nPer Thread Frequency: %v",
 		c.model, c.count, c.frequency)
-	// return fmt.Sprintf("Model: %v\nCore Count: %v\nPer Core Usage: %v\nPer Core Frequency: %v\n",
-	// 	c.model, c.count, c.usage, c.frequency)
 }
 
 func (c *CPU) updateCPUReading() {
 	data := readCPUInfo()
 	c.updateCPUinfoFromData(data)
-
 }
 
 var modelNameRegex = regexp.MustCompile("model name\\s*:\\s*(?P<ModelName>.*)")
