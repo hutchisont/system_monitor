@@ -29,20 +29,22 @@ var memTotalRegex = regexp.MustCompile("MemTotal:\\s*(?P<Total>\\d*)")
 var memAvailableRegex = regexp.MustCompile("MemAvailable:\\s*(?P<Available>\\d*)")
 
 func (r *RAM) updateMeminfoFromData(data []byte) {
-	totalMatches := memTotalRegex.FindSubmatch(data)
-	total := string(totalMatches[memTotalRegex.SubexpIndex("Total")])
+	if r.TotalRAM == 0 {
+		totalMatches := memTotalRegex.FindSubmatch(data)
+		total := string(totalMatches[memTotalRegex.SubexpIndex("Total")])
+		totalkB, err := strconv.ParseFloat(total, 64)
+		if err != nil {
+			totalkB = -1
+		}
+		r.TotalRAM = kiloByteTogigaByte(totalkB)
+	}
+
 	memAvailableMatches := memAvailableRegex.FindSubmatch(data)
 	avail := string(memAvailableMatches[memAvailableRegex.SubexpIndex("Available")])
-	totalkB, err := strconv.ParseFloat(total, 64)
-	if err != nil {
-		totalkB = -1
-	}
 	availkB, err := strconv.ParseFloat(avail, 64)
 	if err != nil {
 		availkB = -1
 	}
-
-	r.TotalRAM = kiloByteTogigaByte(totalkB)
 	r.AvailableRAM = kiloByteTogigaByte(availkB)
 }
 
